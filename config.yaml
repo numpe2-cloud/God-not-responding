@@ -1,0 +1,32 @@
+
+
+nastaveni:
+  timeout: 10
+  retry: 3
+
+
+weby:
+  - nazev: "Křesťanství (katolíci)"
+    url: "https://vatican.va"
+  - nazev: "Islám"
+    url: "https://islam.com"
+  - nazev: "Hinduismus"
+    url: "https://vhp.org"
+  - nazev: "Buddhismus (tibetský)"
+    url: "https://dalailama.com"
+  - nazev: "Buddhismus (zen)"
+    url: "https://zen-buddhism.net"
+  - nazev: "Judaismus"
+    url: "https://chabad.org"
+  - nazev: "Sikhismus"
+    url: "https://sikhs.org"
+  - nazev: "Scientologie"
+    url: "https://scientology.org"
+  - nazev: "Satanismus"
+    url: "https://thesatanictemple.com"
+  - nazev: "Svědkové Jehovovi"
+    url: "https://jw.org"
+  - nazev: "Pastafariánství"
+    url: "https://spaghettimonster.org"
+  - nazev: "Dudeismus"
+    url: "https://dudeism.com"
