@@ -5,6 +5,7 @@
 Monitoruje dostupnost webů 12 vybraných náboženství a duchovních směrů.
 Pravidelně testuje každý web, měří odezvu, kontroluje SSL certifikát,
 počítá velikost stránky a generuje HTML dashboard s výsledky.
+![Dashboard preview](dashboard_preview.png)
 
 ## Instalace a spuštění
 
