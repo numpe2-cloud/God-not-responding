@@ -1,0 +1,11 @@
+name: muj prvni workflow
+on:
+    push:
+        branches:
+            - main
+jobs:
+    pozdrav:
+        runs-on: ubuntu-latest
+        steps:
+            - name: vypis text
+              run: echo "Ahoj z github actions!"
