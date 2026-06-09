@@ -2,7 +2,7 @@ name: muj prvni workflow
 on:
     push:
         branches:
-            - main
+            - master
 jobs:
     pozdrav:
         runs-on: ubuntu-latest
