@@ -1,11 +1,25 @@
 name: muj prvni workflow
+
 on:
-    push:
-        branches:
-            - master
+  push:
+    branches:
+      - master
+
 jobs:
-    pozdrav:
-        runs-on: ubuntu-latest
-        steps:
-            - name: vypis text
-              run: echo "Ahoj z github actions!"
+  testy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Stahni kod
+        uses: actions/checkout@v3
+
+      - name: Nastav Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: Instaluj zavislosti
+        run: pip install -r requirements.txt
+
+      - name: Vypis text
+        run: echo "Ahoj z GitHub Actions!"
