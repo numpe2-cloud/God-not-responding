@@ -7,6 +7,7 @@ SOUBOR = "outputs/history.csv"
 def uloz_vysledek(vysledek):
     if vysledek is None:
         return
+    os.makedirs("outputs", exist_ok=True)
     soubor_existuje = os.path.exists(SOUBOR)
     with open(SOUBOR, "a", encoding="utf-8", newline="") as soubor:
         writer = csv.writer(soubor)
