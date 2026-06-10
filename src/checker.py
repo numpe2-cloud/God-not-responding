@@ -20,11 +20,12 @@ def zkontroluj_ssl(url):
                 zbývá_dní = expirace - datetime.now()
                 ssl_expires_in_days = zbývá_dní.days
                 return ssl_valid, ssl_expires_in_days
-    except Exception:
+    except Exception as e:
+        print(f"SSL chyba pro {hostname}: {e}")
         return False, None
 
 
-def zkontroluj_web(url):
+def zkontroluj_web(url, cas_spusteni=None):
     try:
         hostname = urlparse(url).netloc
         zacatek = time.perf_counter()
@@ -39,7 +40,7 @@ def zkontroluj_web(url):
             "is_online": True,
             "status_code": odpoved.status_code,
             "response_time_ms": cas_ms,
-            "checked_at": datetime.now(),
+            "checked_at": cas_spusteni or datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             "page_size_kb": len(odpoved.content) / 1024,
             "ssl_valid": ssl_valid,
             "ssl_expires_in_days": ssl_expires_in_days
@@ -51,8 +52,9 @@ def zkontroluj_web(url):
             "is_online": False,
             "status_code": None,
             "response_time_ms": None,
-            "checked_at": datetime.now(),
+            "checked_at": cas_spusteni or datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             "page_size_kb": None,
             "ssl_valid": None,
             "ssl_expires_in_days": None
         }
+    

@@ -1,9 +1,9 @@
 import csv
 import datetime
- 
+
 VSTUP = "outputs/history.csv"
 VYSTUP = "outputs/dashboard.html"
- 
+
 SVG_LOGO = """<svg width="180" height="180" viewBox="0 0 220 220" fill="none" xmlns="http://www.w3.org/2000/svg">
   <circle cx="110" cy="110" r="100" stroke="#f5c842" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.4"/>
   <circle cx="110" cy="110" r="80" stroke="#f5c842" stroke-width="0.5" opacity="0.2"/>
@@ -39,7 +39,48 @@ SVG_LOGO = """<svg width="180" height="180" viewBox="0 0 220 220" fill="none" xm
   <circle cx="110" cy="110" r="30" stroke="#f5c842" stroke-width="1.5" fill="#1a1225"/>
   <text x="110" y="118" text-anchor="middle" font-size="22" fill="#f5c842" font-family="Georgia">?</text>
 </svg>"""
- 
+
+def nacti_spusteni():
+    spusteni = []
+    with open(VSTUP, "r", encoding="utf-8-sig") as soubor:
+        reader = csv.DictReader(soubor)
+        for radek in reader:
+            zkraceny = radek["checked_at"][:16]  # bere jen "2026-06-02 15:07"
+            if zkraceny not in spusteni:
+                spusteni.append(zkraceny)
+    return sorted(spusteni)
+
+
+def vypocti_zmeny_pozic():
+    spusteni = nacti_spusteni()
+    if len(spusteni) < 2:
+        return {}
+
+    posledni_dva = spusteni[-2:]
+    poradi = {}
+
+    for cas in posledni_dva:
+        weby = []
+        with open(VSTUP, "r", encoding="utf-8-sig") as soubor:
+            reader = csv.DictReader(soubor)
+            for radek in reader:
+                if radek["checked_at"][:16] == cas and radek["is_online"] == "True":
+                    weby.append((radek["url"], float(radek["response_time_ms"])))
+        weby.sort(key=lambda x: x[1])
+        poradi[cas] = {url: i+1 for i, (url, _) in enumerate(weby)}
+
+    zmeny = {}
+    predchozi = poradi[posledni_dva[0]]
+    aktualni = poradi[posledni_dva[1]]
+
+    for url in aktualni:
+        if url in predchozi:
+            zmeny[url] = predchozi[url] - aktualni[url]
+        else:
+            zmeny[url] = 0
+
+    return zmeny
+
 def generuj_dashboard():
     with open(VSTUP, "r", encoding="utf-8-sig") as soubor:
         reader = csv.DictReader(soubor)
@@ -53,6 +94,7 @@ def generuj_dashboard():
             if radek["is_online"] == "True":
                 checky[radek["url"]]["online"] += 1
  
+    zmeny = vypocti_zmeny_pozic()
     online = [d for d in posledni.values() if d["is_online"] == "True"]
     offline = [d for d in posledni.values() if d["is_online"] != "True"]
     online_sorted = sorted(online, key=lambda x: float(x["response_time_ms"]) if x["response_time_ms"] else 9999)
@@ -90,6 +132,8 @@ def generuj_dashboard():
         html.write(".uptime-ok { color: #4ade80; } .uptime-warn { color: #fbbf24; } .uptime-bad { color: #f87171; }\n")
         html.write(".footer { text-align: center; margin-top: 20px; font-size: 11px; color: #3a3050; letter-spacing: 1px; }\n")
         html.write("@media (max-width: 600px) { body { padding: 12px; } th, td { padding: 6px 8px; font-size: 11px; } .title { font-size: 18px; } .stat-n { font-size: 22px; } }\n")
+        html.write("@keyframes pulse-up { 0%,100% { opacity:1; transform:translateY(0); } 50% { opacity:0.5; transform:translateY(-3px); } }\n")
+        html.write("@keyframes pulse-down { 0%,100% { opacity:1; transform:translateY(0); } 50% { opacity:0.5; transform:translateY(3px); } }\n")
         html.write("</style>\n")
         html.write("</head>\n")
         html.write("<body>\n")
@@ -105,7 +149,7 @@ def generuj_dashboard():
         html.write("</div>\n")
         html.write("<table>\n")
         html.write("<thead><tr>\n")
-        html.write("<th>chrám</th><th>stav</th><th>kód</th><th>odezva (ms) &uarr;</th><th>uptime</th><th>SSL vyprší</th>\n")
+        html.write("<th>chrám</th><th>stav</th><th>kód</th><th>odezva (ms) &uarr;</th><th>změna pozice</th><th>SSL vyprší</th>\n")
         html.write("</tr></thead>\n")
         html.write("<tbody>\n")
  
@@ -125,7 +169,14 @@ def generuj_dashboard():
             html.write(f"<td>{badge}</td>\n")
             html.write(f"<td style='color:#4a4a6a'>{data['status_code']}</td>\n")
             html.write(f"<td class='{ms_class}'>{ms_val}</td>\n")
-            html.write(f"<td class='{uptime_class}'>{uptime} %</td>\n")
+            zmena = zmeny.get(data["url"], 0)
+            if zmena > 0:
+                zmena_html = f"<span style='color:#4ade80; font-size:15px; animation: pulse-up 1.5s infinite;'>▲ {zmena}</span>"
+            elif zmena < 0:
+                zmena_html = f"<span style='color:#f87171; font-size:15px; animation: pulse-down 1.5s infinite;'>▼ {abs(zmena)}</span>"
+            else:
+                zmena_html = f"<span style='color:#3a3050'>&#x2014;</span>"
+            html.write(f"<td>{zmena_html}</td>\n")
             html.write(f"<td class='{dni_class}'>{dni}</td>\n")
             html.write("</tr>\n")
  

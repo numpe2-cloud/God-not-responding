@@ -4,6 +4,7 @@ import os
 
 SOUBOR = "outputs/history.csv"
 
+
 def uloz_vysledek(vysledek):
     if vysledek is None:
         return
