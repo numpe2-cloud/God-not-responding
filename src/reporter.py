@@ -95,15 +95,15 @@ def generuj_dashboard():
             checky[radek["url"]]["celkem"] += 1
             if radek["is_online"] == "True":
                 checky[radek["url"]]["online"] += 1
- 
+
     zmeny = vypocti_zmeny_pozic()
     online = [d for d in posledni.values() if d["is_online"] == "True"]
     offline = [d for d in posledni.values() if d["is_online"] != "True"]
     online_sorted = sorted(online, key=lambda x: float(x["response_time_ms"]) if x["response_time_ms"] else 9999)
     serazeno = online_sorted + offline
- 
+
     cas = datetime.datetime.now().strftime("%d.%m.%Y %H:%M")
- 
+
     with open(VYSTUP, "w", encoding="utf-8") as html:
         html.write("<!DOCTYPE html>\n")
         html.write("<html>\n")
@@ -154,7 +154,7 @@ def generuj_dashboard():
         html.write("<th>chrám</th><th>stav</th><th>kód</th><th>odezva (ms) &uarr;</th><th>změna pozice</th><th>SSL vyprší</th>\n")
         html.write("</tr></thead>\n")
         html.write("<tbody>\n")
- 
+
         for data in serazeno:
             stav = data["is_online"] == "True"
             rychlost = round(float(data["response_time_ms"]), 2) if data["response_time_ms"] else 0
@@ -176,14 +176,13 @@ def generuj_dashboard():
             elif zmena < 0:
                 zmena_html = f"<span style='color:#f87171; font-size:15px; animation: pulse-down 1.5s infinite;'>▼ {abs(zmena)}</span>"
             else:
-                zmena_html = f"<span style='color:#3a3050'>&#x2014;</span>"
+                zmena_html = "<span style='color:#3a3050'>&#x2014;</span>"
             html.write(f"<td>{zmena_html}</td>\n")
             html.write(f"<td class='{dni_class}'>{dni}</td>\n")
             html.write("</tr>\n")
- 
+
         html.write("</tbody>\n")
         html.write("</table>\n")
         html.write(f"<div class='footer'>Poslední aktualizace: {cas}</div>\n")
         html.write("</body>\n")
         html.write("</html>\n")
- 
