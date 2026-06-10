@@ -40,6 +40,7 @@ SVG_LOGO = """<svg width="180" height="180" viewBox="0 0 220 220" fill="none" xm
   <text x="110" y="118" text-anchor="middle" font-size="22" fill="#f5c842" font-family="Georgia">?</text>
 </svg>"""
 
+
 def nacti_spusteni():
     spusteni = []
     with open(VSTUP, "r", encoding="utf-8-sig") as soubor:
@@ -80,6 +81,7 @@ def vypocti_zmeny_pozic():
             zmeny[url] = 0
 
     return zmeny
+
 
 def generuj_dashboard():
     with open(VSTUP, "r", encoding="utf-8-sig") as soubor:
@@ -157,7 +159,6 @@ def generuj_dashboard():
             stav = data["is_online"] == "True"
             rychlost = round(float(data["response_time_ms"]), 2) if data["response_time_ms"] else 0
             uptime = round(checky[data["url"]]["online"] / checky[data["url"]]["celkem"] * 100)
-            uptime_class = "uptime-ok" if uptime >= 80 else ("uptime-warn" if uptime >= 50 else "uptime-bad")
             badge = "<span class='badge bon'>&#x2713; ONLINE</span>" if stav else "<span class='badge bof'>&#x2717; OFFLINE</span>"
             row_class = "row-b" if stav else "row-f"
             ms_class = "fast" if rychlost and rychlost < 400 else ("slow" if rychlost else "dead")

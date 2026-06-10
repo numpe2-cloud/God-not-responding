@@ -57,4 +57,3 @@ def zkontroluj_web(url, cas_spusteni=None):
             "ssl_valid": None,
             "ssl_expires_in_days": None
         }
-    

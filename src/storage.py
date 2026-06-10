@@ -14,5 +14,4 @@ def uloz_vysledek(vysledek):
         writer = csv.writer(soubor)
         if not soubor_existuje:
             writer.writerow(["url", "is_online", "status_code", "response_time_ms", "checked_at", "page_size_kb", "ssl_valid", "ssl_expires_in_days"])
-        writer.writerow(vysledek.values())
-   
+        writer.writerow(vysledek.values())  
