@@ -1,3 +1,4 @@
+[![muj prvni workflow](https://github.com/numpe2-cloud/God-not-responding/actions/workflows/testy.yml/badge.svg)](https://github.com/numpe2-cloud/God-not-responding/actions/workflows/testy.yml)
 # god-not-responding
 
 > Because even higher powers need 99.9% uptime
