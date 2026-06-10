@@ -23,3 +23,6 @@ jobs:
 
       - name: Spust testy
         run: pytest
+
+      - name: Spust kontrolu kodu
+        run: flake8 src/
