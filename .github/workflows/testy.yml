@@ -8,7 +8,9 @@ on:
 jobs:
   testy:
     runs-on: ubuntu-latest
-
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11"]
     steps:
       - name: Stahni kod
         uses: actions/checkout@v3
@@ -16,7 +18,7 @@ jobs:
       - name: Nastav Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.12'
+          python-version: ${{ matrix.python-version }}
 
       - name: Instaluj zavislosti
         run: pip install -r requirements.txt
@@ -26,3 +28,8 @@ jobs:
 
       - name: Spust kontrolu kodu
         run: flake8 src/
+
+      - name: kontrola
+        run: echo "Něco se pokazilo"
+        if: failure()
+  
