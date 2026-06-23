@@ -29,7 +29,26 @@ jobs:
       - name: Spust kontrolu kodu
         run: flake8 src/
 
-      - name: kontrola
+      - name: Kontrola
         run: echo "Něco se pokazilo"
         if: failure()
-  
+
+  build-and-push:
+    runs-on: ubuntu-latest
+    needs: testy
+    steps:
+    - name: Stahni kod
+      uses: actions/checkout@v3
+
+    - name: login
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+    - name: push
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        push: true
+        tags: hovnoprdelstetky/god-not-responding:latest
