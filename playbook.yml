@@ -1,0 +1,19 @@
+- hosts: lokalni
+  become: yes
+  tasks:
+    - name: Nainstaluj Docker
+      ansible.builtin.apt:
+        name: docker.io
+        state: present
+        update_cache: yes
+
+    - name: Spusť službu Docker
+      ansible.builtin.service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Spusť god-not-responding
+      ansible.builtin.command: docker compose up -d
+      args:
+        chdir: /mnt/c/Users/TumaP/Music/DevOPS/god_not_responding
