@@ -6,6 +6,11 @@
 Monitoruje dostupnost webů 12 vybraných náboženství a duchovních směrů.
 Pravidelně testuje každý web, měří odezvu, kontroluje SSL certifikát,
 počítá velikost stránky a generuje HTML dashboard s výsledky.
+
+> Existuje i rozšířená verze tohoto projektu — [god-not-responding-monitoring](https://github.com/numpe2-cloud/god-not-responding-monitoring),
+> která běží nepřetržitě ve smyčce na vlastním homelabu (Docker, docker-compose) a exportuje metriky
+> do Prometheu, odkud se dají sledovat v živém Grafana dashboardu.
+
 ![Dashboard preview](dashboard_preview.png)
 
 ## Instalace a spuštění
